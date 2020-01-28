@@ -1,0 +1,51 @@
+name: CI Data Collection
+
+on:
+  schedule:
+    - cron: 50 * * * *
+  push:
+    branches:
+      - gh-pages
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get current directory
+        run: pwd
+      - name: Get current files and status
+        run: |
+          ls
+          git status
+      - name: Collect Data
+        run: |
+          FILE=./data/china/2019ncov_`date +"%Y%m%d"`.json
+          if [ -f "$FILE" ]; then
+              echo "$FILE exists. Done for today."
+          else
+              echo "Begin to collect hospital data."
+              url="http://ncov.nosensor.com:8080/api/"
+              response=$(curl -f "$url")
+              status=$?
+              if [ $status -eq 0 ]; then
+                  echo $response > $FILE
+                  echo "$FILE saved."
+                  echo `date +"%Y%m%d"` >> ./logs/china.txt
+              else
+                  echo "curl exit code: ($status) $response"
+                  exit $status
+              fi
+          fi
+      - name: git check in
+        run: |
+          git config --global user.name 'GA Bot'
+          git config --global user.email 'emptymalei@users.noreply.github.com'
+          if [[ `git status --porcelain` ]]; then
+            git add .
+            git commit -am "Data collected"
+            git push
+          else
+            echo 'unable to detech changes'
+          fi
