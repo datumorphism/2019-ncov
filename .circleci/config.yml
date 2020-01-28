@@ -2,7 +2,7 @@ version: 2.1
 # following https://stackoverflow.com/questions/44773415/how-to-push-a-commit-to-github-from-a-circleci-build-using-a-personal-access-tok
 
 jobs:
-  2019ncov:
+  data2019ncov:
     machine: true
     steps:
       - run:
@@ -42,4 +42,4 @@ workflows:
               only:
                 - gh-pages
     jobs:
-      - 2019ncov
+      - data2019ncov
