@@ -35,7 +35,6 @@ jobs:
                   echo `date +"%Y%m%d"` >> ./logs/china.txt
               else
                   echo "curl exit code: ($status) $response"
-                  exit $status
               fi
           fi
       - name: git check in
