@@ -1,8 +1,8 @@
 name: CI Data Collection
 
 on:
-  schedule:
-    - cron: 50 7 * * *
+  # schedule:
+  #   - cron: 50 7 * * *
   push:
     branches:
       - gh-pages
